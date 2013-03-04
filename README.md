@@ -1,4 +1,4 @@
-# Slashadmin::TableFor
+# GridFu
 
 https://github.com/evilmartians/slashadmin/issues/3
 
@@ -6,7 +6,7 @@ https://github.com/evilmartians/slashadmin/issues/3
 
 Add this line to your application's Gemfile:
 
-    gem 'slashadmin-table_for'
+    gem 'grid_fu'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install slashadmin-table_for
+    $ gem install grid_fu
 
 ## Usage
 
