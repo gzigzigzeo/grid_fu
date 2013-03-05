@@ -22,6 +22,7 @@ Do not forget to describe config options.
 
 ## TODO
 
+0. Header and footer itself.
 1. Default header & footer if none present.
 2. Render body, footer and header separately
 3. Specs.

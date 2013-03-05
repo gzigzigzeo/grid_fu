@@ -6,6 +6,7 @@ require 'grid_fu/version'
 require 'grid_fu/element'
 require 'grid_fu/table'
 require 'grid_fu/row'
+require 'grid_fu/section'
 require 'grid_fu/body'
 require 'grid_fu/cell'
 

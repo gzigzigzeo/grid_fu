@@ -1,10 +1,11 @@
 module GridFu
   class Cell < Element
-    def initialize(*args, &block)
+    def initialize(tag, *args, &block)
       self.value = block
       self.key   = args.first if args.first.is_a?(String) or args.first.is_a?(Symbol)
 
-      config.tag = 'td'
+      config.tag = tag
+
       super(*args, &nil) # Bypass block evaling: in this case it's a value formatter
     end
 

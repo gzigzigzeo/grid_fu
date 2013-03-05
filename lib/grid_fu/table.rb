@@ -1,6 +1,6 @@
 module GridFu
   class Table < Element
-    attr_reader :header_content, :body_content, :footer_content
+    attr_reader :thead, :tbody, :tfoot
 
     def initialize(*args, &block)
       config.tag ||= 'table'
@@ -10,13 +10,23 @@ module GridFu
 
     protected
     def html_content(collection, resource_class = nil)
-      body_content.to_html(collection, resource_class)
+      thead.to_html(collection, resource_class) +
+      tbody.to_html(collection, resource_class) +
+      tfoot.to_html(collection, resource_class)
+    end
+
+    def header(*args, &block)
+      self.thead = Section.new('thead', 'th', *args, &block)
     end
 
     def body(*args, &block)
-      self.body_content = Body.new(*args, &block)
+      self.tbody = Body.new('tbody', 'td', *args, &block)
     end
 
-    attr_writer :header_content, :body_content, :footer_content
+    def footer(*args, &block)
+      self.tfoot = Section.new('tfoot', 'td', *args, &block)
+    end
+
+    attr_writer :thead, :tbody, :tfoot
   end
 end
