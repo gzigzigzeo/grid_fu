@@ -12,8 +12,8 @@ module GridFu
 
     protected
     def html_content(collection, resource_class)
-      html = collection.map do |member|
-        rows.map.with_index { |row, index| row.to_html(member, index) }.join(' ')
+      html = collection.map.with_index do |member, index|
+        rows.map { |row| row.to_html(member, index) }.join(' ')
       end
       html.join
     end

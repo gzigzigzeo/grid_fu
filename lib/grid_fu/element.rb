@@ -21,11 +21,13 @@ module GridFu
         html << " #{html_options}"
       end
       html << '>'
+
       if block_given?
         html << yield(*args)
       else
         html << html_content(*args).to_s
       end
+
       html << "</#{tag}>"
 
       html.join

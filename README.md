@@ -36,7 +36,6 @@ Do not forget to describe config options.
 12. Avoid body block if there's no header/footer.
 13. value: :function cell param
 14. merge_html_options?
-15. Bypass :value param.
 
 ## Contributing
 
