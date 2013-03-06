@@ -2,11 +2,12 @@ module GridFu
   class Row < Element
     attr_reader :cells
 
+    config.tag = 'tr'
+
     def initialize(cell_tag, *args, &block)
       self.cells = []
 
       config.cell_tag = cell_tag
-      config.tag      = 'tr'
 
       super
     end

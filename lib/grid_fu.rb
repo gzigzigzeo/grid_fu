@@ -4,6 +4,8 @@ require 'active_support/configurable'
 
 require 'grid_fu/version'
 require 'grid_fu/element'
+require 'grid_fu/element/to_html'
+require 'grid_fu/element/options'
 require 'grid_fu/table'
 require 'grid_fu/row'
 require 'grid_fu/section'
