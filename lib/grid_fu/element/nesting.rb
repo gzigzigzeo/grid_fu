@@ -13,12 +13,6 @@ module GridFu
         end
         protected accessor_name
       end
-
-      def option_not_defined(name)
-        proc {
-          raise NotImplementedError, "Configuration option #{name} does not defined"
-        }
-      end
     end
   end
 end

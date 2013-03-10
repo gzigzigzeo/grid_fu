@@ -9,26 +9,36 @@ module GridFu
 
     attr_reader :key, :value
 
-    protected
-#    def html_content(member, index)
-#      value = self.value.call(member, index) if self.value.present?
-#      value ||= member.send(key) if key.present? and member.respond_to?(key)
-#      value
-#    end
-
     attr_writer :value
     attr_writer :key
   end
 
   class BodyCell < Cell
     config.tag = 'td'
+
+    protected
+    def html_content(member, index)
+      value = self.value.call(member, index) if self.value.present?
+      value ||= member.send(key) if key.present? and member.respond_to?(key)
+      value
+    end
   end
 
   class HeaderCell < Cell
     config.tag = 'th'
+
+    protected
+    def html_content(collection)
+      value
+    end
   end
 
   class FooterCell < Cell
     config.tag = 'td'
+
+    protected
+    def html_content(collection)
+      value
+    end
   end
 end

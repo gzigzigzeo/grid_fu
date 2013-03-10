@@ -20,6 +20,7 @@ module GridFu
     end
 
     protected
+    # HTML content for current item
     def html_content(*args)
       nested = get_options(:render_nested_elements, *args).first
 
@@ -34,6 +35,7 @@ module GridFu
     end
 
     private
+    # Translates html_options to HTML attributes
     def _to_html_args(options, prepend = nil)
       options = options || {}
       html_args = options.map do |key, value|
@@ -47,6 +49,7 @@ module GridFu
       html_args.join(' ')
     end
 
+    # Gets given option values. If option is a block - yields it.
     def get_options(keys, *args)
       keys = Array.wrap(keys)
       keys.map do |name|

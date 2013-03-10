@@ -1,6 +1,12 @@
 module GridFu
   class Element
     protected
+    # Catches call to configuration option setter.
+    #
+    # Example:
+    # body do
+    #   html_options { class: 'test' } # Holds such calls
+    # end
     def method_missing(method_name, *args)
       return super unless method_name.to_s.in?(config.allowed_configuration_options)
       config[method_name] = args.first
