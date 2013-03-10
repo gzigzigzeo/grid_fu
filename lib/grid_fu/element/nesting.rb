@@ -2,7 +2,7 @@ module GridFu
   class Element
     class << self
       protected
-      # Defines dsl method for configuring nested element.
+      # Defines DSL method for configuring nested element.
       # If no args/block passed - returns currently defined elements as array.
       #
       # Example:

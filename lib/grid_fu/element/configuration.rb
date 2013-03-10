@@ -1,7 +1,7 @@
 module GridFu
   class Element
     protected
-    # Catches call to configuration option setter.
+    # Catches a call to configuration option setter.
     #
     # Example:
     # body do

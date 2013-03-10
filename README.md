@@ -139,6 +139,16 @@ HeaderCell, BodyCell, FooterCell.
 
 So, you can replace table with ordered list or something you need.
 
+## Partial rendering
+
+Could be useful for twitter-style pagination:
+
+```ruby
+table.element_to_html(:header, collection, User)
+table.element_to_html(:body, collection, User)
+table.element_to_html(:footer, collection, User)
+```
+
 ## TODO
 
 1. Think about sorting.
