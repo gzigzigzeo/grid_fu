@@ -30,7 +30,7 @@ end
 puts short_table.to_html(collection, User)
 ```
 
-You will see something like:
+You will see following:
 
 ```html
 # <table>
@@ -99,7 +99,7 @@ end
 puts table.to_html(collection)
 ```
 
-Every element accepts such options:
+Every element accepts:
 * html_options - to customize default options.
 * override_html_options - to completely override default html options.
 * tag - to change tag name.
@@ -108,11 +108,11 @@ Default HTML options are:
 * data-id - for tbody/tr.
 * data-key - for tbody/tr/td.
 
-You can override default html options for a row with :override_html_options
+You can override default html options for an element with :override_html_options
 option.
 
 You can specify two or more rows in body section. All of this rows will be
-applied to every collection item.
+rendered for every collection item.
 
 ## Global configuration
 
