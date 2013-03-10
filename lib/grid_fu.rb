@@ -1,16 +1,17 @@
-require 'active_support/core_ext/class/attribute_accessors'
 require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/object/inclusion'
+require 'active_support/core_ext/string/inflections'
 require 'active_support/configurable'
 
 require 'grid_fu/version'
 require 'grid_fu/element'
-require 'grid_fu/element/to_html'
-require 'grid_fu/element/options'
+require 'grid_fu/element/configuration'
+require 'grid_fu/element/rendering'
+require 'grid_fu/element/nesting'
+require 'grid_fu/cells'
+require 'grid_fu/rows'
+require 'grid_fu/sections'
 require 'grid_fu/table'
-require 'grid_fu/row'
-require 'grid_fu/section'
-require 'grid_fu/body'
-require 'grid_fu/cell'
 
 module GridFu
   def define(*args, &block)

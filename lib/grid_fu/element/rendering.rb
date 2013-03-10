@@ -3,6 +3,8 @@ module GridFu
     def to_html(*args)
       tag, html_options = get_options([:tag, :html_options], *args)
 
+      raise "Set tag option for #{self.class.name}" if tag.blank?
+
       html_options = _to_html_args(html_options)
 
       html = []
@@ -19,7 +21,16 @@ module GridFu
 
     protected
     def html_content(*args)
-      raise NotImplementedError, "Must implement #html_content for #{self.class.name}"
+      nested = get_options(:render_nested_elements, *args).first
+
+      if nested.blank?
+        raise "Set render_nested_elements options or override #html_content/#to_html for #{self.class.name}"
+      end
+
+      html = nested.map do |element|
+        self.send(element).map { |element| element.to_html(*args) }.join
+      end
+      html.join
     end
 
     private
@@ -34,6 +45,13 @@ module GridFu
         end
       end
       html_args.join(' ')
+    end
+
+    def get_options(keys, *args)
+      keys = Array.wrap(keys)
+      keys.map do |name|
+        config[name].is_a?(Proc) ? config[name].call(*args) : config[name]
+      end
     end
   end
 end
