@@ -33,6 +33,21 @@ describe 'Grid' do
     end
   end
 
+  context 'partial rendering' do
+    subject do
+      sample_table_full_described_definition.element_to_html(:body, sample_collection)
+    end
+
+    it 'should render header, footer, body separately' do
+      subject.should_not have_tag 'thead'
+      subject.should_not have_tag 'tfoot'
+
+      subject.should have_tag 'tbody'
+      subject.should have_tag 'tr'
+      subject.should have_tag 'td'
+    end
+  end
+
   context 'defined shortly' do
     subject { sample_table_short }
 
@@ -53,6 +68,8 @@ describe 'Grid' do
         with_tag 'th', text: 'Humanized id', count: 1
         with_tag 'th', text: 'Humanized age', count: 1
       end
+
+      subject.should_not have_tag 'tfoot'
     end
   end
 end

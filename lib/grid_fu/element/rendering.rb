@@ -22,6 +22,10 @@ module GridFu
       html.join
     end
 
+    def element_to_html(element, *args)
+      send(element).map { |item| item.to_html(*args) }.join
+    end
+
     protected
     # HTML content for element. Renders elements set by :render_nested_elements
     # wrapped by :tag.

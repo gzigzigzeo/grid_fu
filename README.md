@@ -1,6 +1,7 @@
 # GridFu
 
-https://github.com/evilmartians/slashadmin/issues/3
+Inspired by discussion at: https://github.com/evilmartians/slashadmin/issues/3.
+Rails table renderer that tries to be flexible.
 
 ## Installation
 
@@ -21,87 +22,123 @@ Or install it yourself as:
 Somwhere in your app:
 
 ```ruby
-  table = GridFu.define do
-    html_options class: 'table'
+short_table = GridFu.define do
+  cell :id
+  cell :name
+end
 
-    header do
-      row do
-        cell 'Id', html_options: { colspan: 5 }
-        cell do
-          'Doctor strangelove'
-        end
-      end
-    end
+puts short_table.to_html(collection, User)
+```
 
-    body do
-      html_options class: 'sortable'
-      row do
-        html_options do |member, index|
-          { data: { id: member.id, index: index } }
-        end
+You will see something like:
 
-        cell html_options: ->(member, _) { { data: { value: member.id } } } do |_, index|
-          index
-        end
-        cell :id
-        cell :age do |member, _|
-          "Dead at #{member.age}"
-        end
-        cell do |_, index|
-          sample_helper_function(index)
-        end
-      end
+```html
+# <table>
+#   <thead><tr><th>Id</th><th>User name</th></tr></thead>
+#   <tbody>
+#     <tr><td>1</td><td>John Doe</td></tr>
+#     <tr>...</tr>
+#   </tbody>
+# </table>
+```
 
-      row html_options: { class: 'small' } do
-        tag 'overriden_tr'
+## Full definition
 
-        cell :test do
-          "test"
-        end
+```ruby
+table = GridFu.define do
+  html_options class: 'table'
 
-        cell :id, formatter: :sample_formatter
-      end
-    end
-
-    footer do
-      row do
-        cell html_options: { rowspan: 3 } do
-          "noop"
-        end
+  header do
+    row do
+      cell 'Id', html_options: { colspan: 5 }
+      cell do
+        'Doctor strangelove'
       end
     end
   end
 
-  puts table.to_html(collection)
+  body do
+    html_options class: 'sortable'
+    row do
+      html_options do |member, index|
+        { data: { id: member.id, index: index } }
+      end
+
+      cell html_options: ->(member, _) { { data: { value: member.id } } } do |_, index|
+        index
+      end
+      cell :id
+      cell :age do |member, _|
+        "Dead at #{member.age}"
+      end
+      cell do |_, index|
+        sample_helper_function(index)
+      end
+    end
+
+    row html_options: { class: 'small' } do
+      tag 'overriden_tr'
+
+      cell :test do
+        "test"
+      end
+
+      cell :age, formatter: :sample_formatter
+    end
+  end
+
+  footer do
+    row do
+      cell html_options: { rowspan: 3 } do
+        "On foot"
+      end
+    end
+  end
+end
+
+puts table.to_html(collection)
 ```
 
-Every element accepts:
-* tag
-* html_options
-* override_html_options
+Every element accepts such options:
+* html_options - to customize default options.
+* override_html_options - to completely override default html options.
+* tag - to change tag name.
 
+Default HTML options are:
+* data-id - for tbody/tr.
+* data-key - for tbody/tr/td.
 
-## Shortened definition
+You can override default html options for a row with :override_html_options
+option.
 
-## Global configuration options
+You can specify two or more rows in body section. All of this rows will be
+applied to every collection item.
 
-## Rendering behaviour override
+## Global configuration
+
+Table elements can be customized at application level.
+
+Somewhere in initializer:
+
+```ruby
+GridFu::Table.html_options     = { class: 'table' }
+GridFu::HeaderRow.html_options = proc { |_, resource_class = nil|
+  { class: resource_class.name.underscore }
+}
+```
+
+You can use: Table, Header, Body, Footer, HeaderRow, BodyRow, FooterRow,
+HeaderCell, BodyCell, FooterCell.
+
+So, you can replace table with ordered list or something you need.
 
 ## TODO
 
-0. Simplify Table class (options) ~+
-1. Default header & footer if none present. ~+
-2. Render body, footer and header separately ~+
-3. Specs. ~+
-4. Sort?
-5. Nice output.
-6. Default data attrs for everything. ~
-7. Rowspan
-8. :span
-9. Footer ~+
-10. Header ~+
-12. Avoid body block if there's no header/footer. ~+
-13. value: :function cell param
+1. Think about sorting.
+2. Formatted output.
+3. Data attrs for everything.
+4. Authospan.
+5. :row as parameter.
 
 ## Contributing
 

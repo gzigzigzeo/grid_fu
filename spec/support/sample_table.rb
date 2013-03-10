@@ -22,8 +22,8 @@ def sample_formatter(key, member, index)
   "Formatter for #{member[key]}"
 end
 
-def sample_table_full_described
-  table = GridFu.define do
+def sample_table_full_described_definition
+  GridFu.define do
     html_options class: 'table'
 
     header do
@@ -73,7 +73,10 @@ def sample_table_full_described
       end
     end
   end
-  table.to_html(sample_collection)
+end
+
+def sample_table_full_described
+  sample_table_full_described_definition.to_html(sample_collection)
 end
 
 def sample_table_short
