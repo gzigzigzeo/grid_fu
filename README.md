@@ -108,6 +108,13 @@ Default HTML options are:
 * data-id - for tbody/tr.
 * data-key - for tbody/tr/td.
 
+Options which are set by blocks accepts:
+* |member, index| - for row and cell inside body element.
+* |collection, klass = nil| - for table, header and footer (and all nested elements)
+* Same for body.
+
+Method called with :formatter option accepts value, member and index.
+
 You can override default html options for an element with :override_html_options
 option.
 
