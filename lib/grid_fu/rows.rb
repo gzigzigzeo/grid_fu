@@ -7,6 +7,10 @@ module GridFu
   end
 
   class BodyRow < Row
+    config.override_html_options = proc { |member, index|
+      { data: { id: member.try(:id) } }
+    }
+
     nest :cell, BodyCell
 
     protected

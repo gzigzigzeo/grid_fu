@@ -7,10 +7,8 @@ module GridFu
       super(*args, &nil) # Bypass block evaling: in this case it's a value formatter
     end
 
-    attr_reader :key, :value
-
-    attr_writer :value
-    attr_writer :key
+    protected
+    attr_accessor :key, :value
   end
 
   class BodyCell < Cell
@@ -29,7 +27,7 @@ module GridFu
 
     protected
     def html_content(collection)
-      value
+      key.to_s
     end
   end
 

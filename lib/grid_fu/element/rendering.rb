@@ -1,10 +1,12 @@
 module GridFu
   class Element
     def to_html(*args)
-      tag, html_options = get_options([:tag, :html_options], *args)
+      tag, override_html_options, html_options =
+        get_options([:tag, :override_html_options, :html_options], *args)
 
       raise "Set tag option for #{self.class.name}" if tag.blank?
 
+      html_options = override_html_options.merge(html_options)
       html_options = _to_html_args(html_options)
 
       html = []

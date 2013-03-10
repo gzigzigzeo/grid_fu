@@ -9,7 +9,7 @@ module GridFu
     nest :row, BodyRow
 
     protected
-    def html_content(collection)
+    def html_content(collection, resource_class = nil)
       html = collection.map.with_index do |member, index|
         row.map { |row| row.to_html(member, index) }.join(' ')
       end

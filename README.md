@@ -18,7 +18,70 @@ Or install it yourself as:
 
 ## Usage
 
-Do not forget to describe config options.
+Somwhere in your app:
+
+```ruby
+  GridFu.define do
+    html_options class: 'table'
+
+    header do
+      row do
+        cell :id
+        cell do
+          'Doctor strangelove'
+        end
+      end
+    end
+
+    body do
+      html_options class: 'sortable'
+      row do
+        html_options do |member, index|
+          { data: { id: member.id, index: index } }
+        end
+
+        cell html_options: ->(member, _) { { data: { value: member.id } } } do |_, index|
+          index
+        end
+        cell :id
+        cell :age do |member, _|
+          "Dead at #{member.age}"
+        end
+        cell do |_, index|
+          sample_helper_function(index)
+        end
+      end
+
+      row html_options: { class: 'small' } do
+        tag 'div'
+
+        cell :test do
+          "test"
+        end
+      end
+    end
+
+    footer do
+      row do
+        cell html_options: { rowspan: 3 } do
+          "noop"
+        end
+      end
+    end
+  end
+```
+
+Every element accepts:
+* tag
+* html_options
+* override_html_options
+
+
+## Shortened definition
+
+## Global configuration options
+
+## Rendering behaviour override
 
 ## TODO
 
@@ -27,17 +90,14 @@ Do not forget to describe config options.
 2. Render body, footer and header separately ~+
 3. Specs. ~+
 4. Sort?
-5. Nice output. ~
+5. Nice output.
 6. Default data attrs for everything. ~
-7. Rowspan ~
-8. :span ~
+7. Rowspan
+8. :span
 9. Footer ~+
 10. Header ~+
-11. Base class for footer, header and tbody. ~+
 12. Avoid body block if there's no header/footer. ~+
 13. value: :function cell param
-14. merge_html_options?
-15. Default values for nonbuilded attributes.
 
 ## Contributing
 
