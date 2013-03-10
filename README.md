@@ -21,12 +21,12 @@ Or install it yourself as:
 Somwhere in your app:
 
 ```ruby
-  GridFu.define do
+  table = GridFu.define do
     html_options class: 'table'
 
     header do
       row do
-        cell :id
+        cell 'Id', html_options: { colspan: 5 }
         cell do
           'Doctor strangelove'
         end
@@ -53,11 +53,13 @@ Somwhere in your app:
       end
 
       row html_options: { class: 'small' } do
-        tag 'div'
+        tag 'overriden_tr'
 
         cell :test do
           "test"
         end
+
+        cell :id, formatter: :sample_formatter
       end
     end
 
@@ -69,6 +71,8 @@ Somwhere in your app:
       end
     end
   end
+
+  puts table.to_html(collection)
 ```
 
 Every element accepts:

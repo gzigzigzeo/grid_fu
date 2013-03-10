@@ -4,7 +4,8 @@ module GridFu
       self.value = block
       self.key   = args.first if args.first.is_a?(String) or args.first.is_a?(Symbol)
 
-      super(*args, &nil) # Bypass block evaling: in this case it's a value formatter
+      # Bypass block evaling: in this case it's not a config but a value formatter
+      super(*args, &nil)
     end
 
     protected
@@ -18,6 +19,11 @@ module GridFu
     def html_content(member, index)
       value = self.value.call(member, index) if self.value.present?
       value ||= member.send(key) if key.present? and member.respond_to?(key)
+
+      if config.formatter.present?
+        value ||= send(config.formatter, key, member, index)
+      end
+
       value
     end
   end
@@ -26,8 +32,13 @@ module GridFu
     config.tag = 'th'
 
     protected
-    def html_content(collection)
-      key.to_s
+    def html_content(collection, resource_class = nil)
+      return value.call(collection, resource_class) if value.is_a?(Proc)
+      if resource_class.respond_to?(:human_attribute_name)
+        resource_class.human_attribute_name(key)
+      else
+        key
+      end
     end
   end
 
@@ -35,8 +46,9 @@ module GridFu
     config.tag = 'td'
 
     protected
-    def html_content(collection)
-      value
+    def html_content(*args)
+      return value.call(*args) if value.is_a?(Proc)
+      key
     end
   end
 end

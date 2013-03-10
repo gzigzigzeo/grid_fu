@@ -1,5 +1,11 @@
 require 'ostruct'
 
+class ActiveRecordMock
+  def self.human_attribute_name(name)
+    "Humanized #{name.to_s}"
+  end
+end
+
 def sample_collection
   [
     OpenStruct.new(id: 10, age: 27, value: 'Jim Morrison'),
@@ -12,13 +18,17 @@ def sample_helper_function(arg)
   "I hope this helps #{arg}"
 end
 
+def sample_formatter(key, member, index)
+  "Formatter for #{member[key]}"
+end
+
 def sample_table_full_described
-  GridFu.define do
+  table = GridFu.define do
     html_options class: 'table'
 
     header do
       row do
-        cell :id
+        cell 'Id', html_options: { colspan: 5 }
         cell do
           'Doctor strangelove'
         end
@@ -45,24 +55,52 @@ def sample_table_full_described
       end
 
       row html_options: { class: 'small' } do
-        tag 'div'
+        tag 'overriden_tr'
 
         cell :test do
           "test"
         end
+
+        cell :age, formatter: :sample_formatter
       end
     end
 
     footer do
       row do
         cell html_options: { rowspan: 3 } do
-          "noop"
+          "On foot"
         end
       end
     end
   end
+  table.to_html(sample_collection)
 end
 
-def sample_table_full_described_html
-  sample_table_full_described.to_html(sample_collection)
+def sample_table_short
+  table = GridFu.define do
+    header do
+      cell 'Id'
+      cell 'Age'
+    end
+
+    cell :id
+    cell :age
+  end
+  table.to_html(sample_collection)
+end
+
+def sample_table_active_record
+  table = GridFu.define do
+    header do
+      cell :id
+      cell :age
+      cell "Custom string"
+      cell do
+        "Custom block"
+      end
+    end
+    cell :id
+    cell :age
+  end
+  table.to_html(sample_collection, ActiveRecordMock)
 end
