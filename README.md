@@ -128,8 +128,8 @@ Table elements can be customized at application level.
 Somewhere in initializer:
 
 ```ruby
-GridFu::Table.html_options     = { class: 'table' }
-GridFu::HeaderRow.html_options = proc { |_, resource_class = nil|
+GridFu::Table.config.html_options     = { class: 'table' }
+GridFu::HeaderRow.config.html_options = proc { |_, resource_class = nil|
   { class: resource_class.name.underscore }
 }
 ```
