@@ -24,11 +24,11 @@ end
 
 def sample_table_full_described_definition
   GridFu.define do
-    html_options class: 'table'
+    html class: 'table'
 
     header do
       row do
-        cell 'Id', html_options: { colspan: 5 }
+        cell 'Id', html: { colspan: 5 }
         cell do
           'Doctor strangelove'
         end
@@ -36,13 +36,13 @@ def sample_table_full_described_definition
     end
 
     body do
-      html_options class: 'sortable'
+      html class: 'sortable'
       row do
-        html_options do |member, index|
+        html do |member, index|
           { data: { id: member.id, index: index } }
         end
 
-        cell html_options: ->(member, _) { { data: { value: member.id } } } do |_, index|
+        cell html: ->(member, _) { { data: { value: member.id } } } do |_, index|
           index
         end
         cell :id
@@ -54,7 +54,7 @@ def sample_table_full_described_definition
         end
       end
 
-      row html_options: { class: 'small' } do
+      row html: { class: 'small' } do
         tag 'overriden_tr'
 
         cell :test do
@@ -67,7 +67,7 @@ def sample_table_full_described_definition
 
     footer do
       row do
-        cell html_options: { rowspan: 3 } do
+        cell html: { rowspan: 3 } do
           "On foot"
         end
       end
@@ -80,7 +80,7 @@ def sample_table_full_described
 end
 
 def sample_table_short
-  table = GridFu.define do
+  GridFu.render(sample_collection) do
     header do
       cell 'Id'
       cell 'Age'
@@ -89,11 +89,10 @@ def sample_table_short
     cell :id
     cell :age
   end
-  table.to_html(sample_collection)
 end
 
 def sample_table_active_record
-  table = GridFu.define do
+  GridFu.render(sample_collection, ActiveRecordMock) do
     header do
       cell :id
       cell :age
@@ -105,5 +104,4 @@ def sample_table_active_record
     cell :id
     cell :age
   end
-  table.to_html(sample_collection, ActiveRecordMock)
 end

@@ -7,7 +7,7 @@ module GridFu
   end
 
   class BodyRow < Row
-    config.override_html_options = proc { |member, index|
+    config.override_html = proc { |member, index|
       { data: { id: member.try(:id) } }
     }
 

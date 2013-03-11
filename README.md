@@ -42,15 +42,15 @@ You will see following:
 # </table>
 ```
 
-## Full definition
+## Full DSL
 
 ```ruby
 table = GridFu.define do
-  html_options class: 'table'
+  html class: 'table'
 
   header do
     row do
-      cell 'Id', html_options: { colspan: 5 }
+      cell 'Id', html: { colspan: 5 }
       cell do
         'Doctor strangelove'
       end
@@ -58,13 +58,13 @@ table = GridFu.define do
   end
 
   body do
-    html_options class: 'sortable'
+    html class: 'sortable'
     row do
-      html_options do |member, index|
+      html do |member, index|
         { data: { id: member.id, index: index } }
       end
 
-      cell html_options: ->(member, _) { { data: { value: member.id } } } do |_, index|
+      cell html: ->(member, _) { { data: { value: member.id } } } do |_, index|
         index
       end
       cell :id
@@ -76,7 +76,7 @@ table = GridFu.define do
       end
     end
 
-    row html_options: { class: 'small' } do
+    row html: { class: 'small' } do
       tag 'overriden_tr'
 
       cell :test do
@@ -89,7 +89,7 @@ table = GridFu.define do
 
   footer do
     row do
-      cell html_options: { rowspan: 3 } do
+      cell html: { rowspan: 3 } do
         "On foot"
       end
     end
@@ -100,8 +100,8 @@ puts table.to_html(collection)
 ```
 
 Every element accepts:
-* html_options - to customize default options.
-* override_html_options - to completely override default html options.
+* html - to customize default options.
+* override_html - to completely override default html options.
 * tag - to change tag name.
 
 Default HTML options are:
@@ -115,7 +115,7 @@ Options which are set by blocks accepts:
 
 Method called with :formatter option accepts value, member and index.
 
-You can override default html options for an element with :override_html_options
+You can override default html options for an element with :override_html
 option.
 
 You can specify two or more rows in body section. All of this rows will be
@@ -128,8 +128,8 @@ Table elements can be customized at application level.
 Somewhere in initializer:
 
 ```ruby
-GridFu::Table.config.html_options     = { class: 'table' }
-GridFu::HeaderRow.config.html_options = proc { |_, resource_class = nil|
+GridFu::Table.config.html     = { class: 'table' }
+GridFu::HeaderRow.config.html = proc { |_, resource_class = nil|
   { class: resource_class.name.underscore }
 }
 ```
@@ -156,9 +156,9 @@ table.element_to_html(:footer, collection, User)
 3. Data attrs for everything.
 4. Authospan.
 5. :row as parameter.
-6. Reusable cells
+6. Reusable cells: reuse :icon, :name, :icon, :checkbox, for: [:header, :footer]
 7. Shortened cell definition
-8. GridFu.render() do
+9. make request, response and so on accessible at definition scope.
 
 ## Contributing
 

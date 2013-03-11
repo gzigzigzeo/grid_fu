@@ -3,7 +3,7 @@ module GridFu
     # Translates element to html tag.
     def to_html(*args)
       tag, override_html_options, html_options =
-        get_options([:tag, :override_html_options, :html_options], *args)
+        get_options([:tag, :override_html, :html], *args)
 
       raise "Set tag option for #{self.class.name}" if tag.blank?
 
@@ -43,7 +43,7 @@ module GridFu
     end
 
     private
-    # Translates html_options to HTML attributes string. Accepts nested
+    # Translates html to HTML attributes string. Accepts nested
     # data-attributes.
     #
     # Example:
