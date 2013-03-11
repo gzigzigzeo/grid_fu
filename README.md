@@ -156,6 +156,9 @@ table.element_to_html(:footer, collection, User)
 3. Data attrs for everything.
 4. Authospan.
 5. :row as parameter.
+6. Reusable cells
+7. Shortened cell definition
+8. GridFu.render() do
 
 ## Contributing
 

@@ -34,7 +34,7 @@ module GridFu
     protected
     def html_content(collection, resource_class = nil)
       return value.call(collection, resource_class) if value.is_a?(Proc)
-      if resource_class.respond_to?(:human_attribute_name)
+      if resource_class.respond_to?(:human_attribute_name) && key.present?
         resource_class.human_attribute_name(key)
       else
         key
