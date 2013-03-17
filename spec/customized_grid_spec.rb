@@ -17,6 +17,7 @@ describe GridFu::Table do
           t.footer { 'Footer name' }
         end
 
+        t.body(html: ->(_) { { class: 'body' } })
         t.body_row({ html: { class: 'body-row-odd' } })
       end
     end
@@ -32,7 +33,7 @@ describe GridFu::Table do
       subject.should have_tag 'tfoot > tr > td', count: 1, text: 'Footer name'
 
       sample_collection.each do |item|
-        subject.should have_tag 'tbody' do
+        subject.should have_tag 'tbody', with: { class: 'body' } do
           with_tag 'tr > td', text: item.id, count: 1
           with_tag 'tr > td', text: item.value, count: 1
         end

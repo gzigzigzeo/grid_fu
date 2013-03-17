@@ -1,17 +1,29 @@
 module GridFu
   class Table
-    # Renders html tag with given options and content.
-    # Yields options which are procs with given options.
-    # Tagname is passed with :tag option.
-    def tag(options, *args, &block)
-      tag, html_options = get_options([:tag, :html], options, *args)
+    private
+    def render_tag(context, options, *args, &block)
+      options = options.slice(:tag, :html)
+      options.each do |key, option|
+        options[key] = option.is_a?(Proc) ?
+          context.instance_exec(*args, &option) : option
+      end
+      tag(options[:tag], options[:html], &block)
+    end
 
+    # Renders html tag with given options and content. Context renders even
+    # tag argument is null.
+    #
+    # Example:
+    # tag('tbody', {class: 'test'}) do
+    #   "The new tag!"
+    # end
+    def tag(tag, options, &block)
       html = []
       if tag.present?
         html << "<#{tag}"
-         if html_options.present?
+         if options.present?
           html << ' '
-          html << to_html_args(html_options)
+          html << to_html_args(options)
         end
         html << '>'
       end

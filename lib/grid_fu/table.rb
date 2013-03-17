@@ -1,5 +1,7 @@
 module GridFu
   class Table
+    include ActiveSupport::Configurable
+
     def initialize(&block)
       @columns    = []
 
@@ -18,11 +20,11 @@ module GridFu
       # Defines table and returns it.
       #
       # Example:
-      #   table = GridFu.define( html: { class: 'table' } ) do
+      #   table = GridFu.define do
       #     ...
       #   end
       #
-      #   puts table.to_html(collection)
+      #   puts table.to_html(self, users, User)
       def define(*args, &block)
         self.new(&block)
       end
@@ -30,7 +32,7 @@ module GridFu
       # Defines table, renders it and returns the result.
       #
       # Example:
-      #   puts GridFu.render(self, collection, html: { class: 'table' } ) do
+      #   puts GridFu.render(self, users, User) do
       #     ...
       #   end
       def render(*args, &block)

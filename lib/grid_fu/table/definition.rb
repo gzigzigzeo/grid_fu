@@ -1,7 +1,5 @@
 module GridFu
   class Table
-    include ActiveSupport::Configurable
-
     config.table       = { tag: 'table' }
 
     config.header      = { tag: 'thead' }

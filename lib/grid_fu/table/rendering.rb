@@ -7,7 +7,7 @@ module GridFu
 
       table = apply_defaults(:table)
 
-      tag(table, member_class) do
+      render_tag(context, table, member_class) do
         html = []
 
         html << header_to_html(context, member_class)
@@ -20,9 +20,9 @@ module GridFu
 
     # Renders table header
     def header_to_html(context, member_class)
-      section_to_html(:header, member_class) do |key, cell_options, index, &block|
+      section_to_html(context, :header, member_class) do |key, cell_options, index, &block|
         if block.present?
-          context.instance_exec(member_class, index, &block)
+          context.instance_exec(member_class, index, self, &block)
         elsif key.present?
           member_class.human_attribute_name(key)
         end
@@ -32,7 +32,7 @@ module GridFu
     # Render table body
     def body_to_html(context, collection, member_class = nil)
       section = apply_defaults(:body)
-      tag(section, member_class) do
+      render_tag(context, section, member_class) do
         render_body_rows(context, collection, member_class)
       end
     end
@@ -47,14 +47,14 @@ module GridFu
           row_options = row_options.first
           row_options = apply_defaults(:body_row, row_options)
 
-          tag(row_options, member_class, index) do
+          render_tag(context, row_options, member_class, index) do
             cols = row.map do |column|
               key, cell_options, value_block = column
               cell_options = apply_defaults(:body_cell, cell_options)
 
-              tag(cell_options) do
+              render_tag(context, cell_options, member, index, self) do
                 if value_block.present?
-                  context.instance_exec(member, index, &value_block)
+                  context.instance_exec(member, index, self, &value_block)
                 elsif key.present?
                   member.send(key)
                 end
@@ -70,30 +70,30 @@ module GridFu
 
     # Renders table footer
     def footer_to_html(context, member_class = nil)
-      section_to_html(:footer, member_class) do |key, cell_options, index, &block|
-        context.instance_exec(member_class, index, &block) if block.present?
+      section_to_html(context, :footer, member_class) do |key, cell_options, index, &block|
+        context.instance_exec(member_class, index, self, &block) if block.present?
       end
     end
 
     private
-    def section_to_html(section, member_class, &block)
+    def section_to_html(context, section, member_class, &block)
       section_key, row_key, cell_key = section, :"#{section}_row", :"#{section}_cell"
 
       rows = get_section(section)
       section = apply_defaults(section_key)
 
-      tag(section, member_class) do
+      render_tag(context, section, member_class) do
         rows = rows.map.with_index do |row, index|
           row_options = self[row_key][index] || []
           row_options = row_options.first
           row_options = apply_defaults(row_key, row_options)
 
-          tag(row_options, member_class, index) do
+          render_tag(context, row_options, member_class, index) do
             cols = row.map do |column|
               key, cell_options, value_block = column
               cell_options = apply_defaults(cell_key, cell_options)
 
-              tag(cell_options, member_class) do
+              render_tag(context, cell_options, member_class) do
                 block.call(key, cell_options, index, &value_block)
               end
             end
@@ -117,16 +117,8 @@ module GridFu
     # Applies default options to given options.
     def apply_defaults(key, options = nil)
       defaults = config[key] || {}
-      options  = options || self[key].try(:first) || {}
+      options  = options || self[key].try(:first).try(:first) || {}
       defaults.merge(options)
-    end
-
-    # Returns expected options. If option is a block yields it with given args.
-    def get_options(expected, options, *args)
-      expected.map do |option|
-        option = options[option]
-        option.is_a?(Proc) ? option.call(*args) : option
-      end
     end
   end
 end
