@@ -113,24 +113,35 @@ end
 
 ## Evaluation context
 
-Note that in first #render parameter you must the context for blocks to evaluate.
+Note that in first #render parameter you must pass the context for blocks to evaluate.
 
 ```ruby
 class AdminTable < GridFu::Table
-  column do |c|
-    c.header
-    c.body { |member, index, t| link_to icon(:move), '#' }
+  def move_icon_column
+    column do |c|
+      c.header
+      c.body { |member, index, t| link_to icon(:move), '#' }
+    end
   end
 end
 ```
 
-c.body context by default will be set to AdminTable instance, so link_to will
-work. In other hand, we could pass context instance as parameter, but it may
-complicate our blocks.
+c.body value block context will be set to the AdminTable instance by default, so
+link_to will not work.
 
-Last parameter is a pass-back to GridFu::Table instance.
+Last parameter is a reference to GridFu::Table instance.
 
 ## Twitter-style pagination
+
+```ruby
+# Definition may be stored for later use
+definition = AdminTable.define do |t|
+  ...
+end
+
+# Renders only body
+AdminTable.render_body_rows(self, users, User, &definition)
+```
 
 ## Installation
 
