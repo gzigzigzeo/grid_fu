@@ -32,7 +32,7 @@ Will produce the following:
 ## Complex example
 
 ```ruby
-GridFu.render(collection, User) do |t|
+GridFu::Table.render(collection, User) do |t|
   t.column do
     t.header { |member_class, index| member_class.to_s }
 
@@ -90,18 +90,22 @@ The other way is to inherit table class:
 class AdminTable < GridFu::Table
   config.table = { tag: 'table', html: { class: 'table' } }
 
-  def move_column
+  def move_icon_column
     column do |c|
       c.header
       c.body   { |member| link_to icon(:move), '#' }
     end
   end
+
+  def check_box_column
+    ...
+  end
 end
 
 puts AdminTable.render(users, User) do
-  move_column
-  column :name
-  check_box_column
+  t.move_icon_column
+  t.column :name
+  t.check_box_column
 end
 ```
 ## Installation

@@ -24,7 +24,7 @@ module GridFu
       #
       #   puts table.to_html(collection)
       def define(*args, &block)
-        self.class.Table.new(&block)
+        self.new(&block)
       end
 
       # Defines table, renders it and returns the result
