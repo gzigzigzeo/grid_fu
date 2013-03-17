@@ -3,6 +3,8 @@
 Inspired by discussion at: https://github.com/evilmartians/slashadmin/issues/3.
 Rails table renderer that tries to be DRY & flexible.
 
+NB!: WIP, experimental, so do not rely on it until u see this warning.
+
 ## Usage
 
 Somwhere in your view:
