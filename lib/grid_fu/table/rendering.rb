@@ -47,7 +47,7 @@ module GridFu
           row_options = row_options.first
           row_options = apply_defaults(:body_row, row_options)
 
-          render_tag(context, row_options, member_class, index) do
+          render_tag(context, row_options, member, index) do
             cols = row.map do |column|
               key, cell_options, value_block = column
               cell_options = apply_defaults(:body_cell, cell_options)
