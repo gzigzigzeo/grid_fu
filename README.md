@@ -34,7 +34,7 @@ Will produce the following:
 ## Complex example
 
 ```ruby
-GridFu::Table.render(collection, User) do |t|
+GridFu::Table.render(self, collection, User) do |t|
   t.column do
     t.header { |member_class, index| member_class.to_s }
 
@@ -95,7 +95,7 @@ class AdminTable < GridFu::Table
   def move_icon_column
     column do |c|
       c.header
-      c.body { |member| link_to icon(:move), '#' }
+      c.body { |member, _, table| link_to icon(:move), '#' }
     end
   end
 
@@ -104,13 +104,31 @@ class AdminTable < GridFu::Table
   end
 end
 
-# Self is a context in which all blocks are evaluated
 puts AdminTable.render(self, users, User) do
   t.move_icon_column
   t.column :name
   t.check_box_column
 end
 ```
+
+## Evaluation context
+
+Note that in first #render parameter you must pass blocks evaluation context.
+
+In our example:
+```ruby
+column do |c|
+  c.header
+  c.body { |member, index, table| link_to icon(:move), '#' }
+end
+```
+
+c.body context by default will be AdminTable instance, so link_to will not be
+available if you give no context. Also, any conditions with controller/params
+and so on will not be available in definition scope if you will not pass this
+scope.
+
+Last parameter is a pass-back to GridFu::Table instance.
 
 ## Twitter-style pagination
 
