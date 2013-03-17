@@ -20,7 +20,7 @@ module GridFu
     def header_to_html(member_class)
       section_to_html(:header, member_class) do |key, cell_options, index, &block|
         if block.present?
-          block.call(member_class, index)
+          @definition_binding.instance_exec(member_class, index, &block)
         elsif key.present?
           member_class.human_attribute_name(key)
         end
@@ -64,7 +64,7 @@ module GridFu
     # Renders table footer
     def footer_to_html(member_class = nil)
       section_to_html(:footer, member_class) do |key, cell_options, index, &block|
-        block.call(member_class, index) if block.present?
+        @definition_binding.instance_exec(member_class, index, &block) if block.present?
       end
     end
 
