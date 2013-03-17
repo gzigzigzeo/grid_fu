@@ -1,8 +1,109 @@
 # GridFu
 
 Inspired by discussion at: https://github.com/evilmartians/slashadmin/issues/3.
-Rails table renderer that tries to be flexible.
+Rails table renderer that tries to be DRY & flexible.
 
+## Usage
+
+Somwhere in your view:
+
+```erb
+<%=
+  GridFu.render(collection, User) do |t|
+    t.column :id
+    t.column :name
+  end
+%>
+```
+
+Will produce the following:
+
+```html
+<table>
+  <thead><tr><th>Id</th><th>User name</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>John Doe</td></tr>
+    <tr>...</tr>
+  </tbody>
+  <tfoot><tr><td></td><td></td></tr></tfoot>
+</table>
+```
+
+## Complex example
+
+```ruby
+GridFu.render(collection, User) do |t|
+  t.column do
+    t.header { |member_class, index| member_class.to_s }
+
+    # Each collection member will be presented with two rows
+    # Let call them odd and even.
+    t.body   :id
+    t.body do |member, index|
+      if member.created_at < 5.years.ago
+        "Old member"
+      end
+    end
+  end
+
+  t.column do
+    t.header :name
+    t.body   :name
+    t.body   { |member| "Warning!" if member.dangerous? }
+  end
+
+  t.body     html: { class: 'users' }
+  t.body_row html: { |member| { data: { id: member.id } } } # Options for odd rows
+  t.body_row html: { class: 'smaller' }                     # Options for even rows
+end
+
+Will produce the following:
+```html
+<table>
+  <thead><tr><th>User</th></tr></thead>
+  <tbody class="users">
+    <tr data-id="1"><td>1</td><td>Old member</td></tr>
+    <tr class="smaller"><td>John doe</td><td>Warning!</td></tr>
+    <tr>...</tr>
+  </tbody>
+</table>
+```
+
+## Global configuration
+
+You could set default options for every element in your table:
+
+```ruby
+GridFu::Table.config.table    = { html: { class: 'table-condenced' }, tag: 'table' }
+GridFu::Table.config.body     = { html: { class: 'table-body' }, tag: 'tbody' }
+GridFu::Table.config.body_row = { html: -> { |member| { html: { data: { id: member.id } } } }
+```
+
+You must specify tag for table element. If tag is nil section will not be
+wrapped with tag on render.
+
+Any option could be a block. Block accepts member or member class and index.
+
+The other way is to inherit table class:
+
+```ruby
+class AdminTable < GridFu::Table
+  config.table = { tag: 'table', html: { class: 'table' } }
+
+  def move_column
+    column do |c|
+      c.header
+      c.body   { |member| link_to icon(:move), '#' }
+    end
+  end
+end
+
+puts AdminTable.render(users, User) do
+  move_column
+  column :name
+  check_box_column
+end
+```
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -17,149 +118,6 @@ Or install it yourself as:
 
     $ gem install grid_fu
 
-## Usage
-
-Somwhere in your app:
-
-```ruby
-short_table = GridFu.define do
-  cell :id
-  cell :name
-end
-
-puts short_table.to_html(collection, User)
-```
-
-You will see following:
-
-```html
-# <table>
-#   <thead><tr><th>Id</th><th>User name</th></tr></thead>
-#   <tbody>
-#     <tr><td>1</td><td>John Doe</td></tr>
-#     <tr>...</tr>
-#   </tbody>
-# </table>
-```
-
-## Full DSL
-
-```ruby
-table = GridFu.define do
-  html class: 'table'
-
-  header do
-    row do
-      cell 'Id', html: { colspan: 5 }
-      cell do
-        'Doctor strangelove'
-      end
-    end
-  end
-
-  body do
-    html class: 'sortable'
-    row do
-      html do |member, index|
-        { data: { id: member.id, index: index } }
-      end
-
-      cell html: ->(member, _) { { data: { value: member.id } } } do |_, index|
-        index
-      end
-      cell :id
-      cell :age do |member, _|
-        "Dead at #{member.age}"
-      end
-      cell do |_, index|
-        sample_helper_function(index)
-      end
-    end
-
-    row html: { class: 'small' } do
-      tag 'overriden_tr'
-
-      cell :test do
-        "test"
-      end
-
-      cell :age, formatter: :sample_formatter
-    end
-  end
-
-  footer do
-    row do
-      cell html: { rowspan: 3 } do
-        "On foot"
-      end
-    end
-  end
-end
-
-puts table.to_html(collection)
-```
-
-Every element accepts:
-* html - to customize default options.
-* override_html - to completely override default html options.
-* tag - to change tag name.
-
-Default HTML options are:
-* data-id - for tbody/tr.
-* data-key - for tbody/tr/td.
-
-Options which are set by blocks accepts:
-* |member, index| - for row and cell inside body element.
-* |collection, klass = nil| - for table, header and footer (and all nested elements)
-* Same for body.
-
-Method called with :formatter option accepts value, member and index.
-
-You can override default html options for an element with :override_html
-option.
-
-You can specify two or more rows in body section. All of this rows will be
-rendered for every collection item.
-
-## Global configuration
-
-Table elements can be customized at application level.
-
-Somewhere in initializer:
-
-```ruby
-GridFu::Table.config.html     = { class: 'table' }
-GridFu::HeaderRow.config.html = proc { |_, resource_class = nil|
-  { class: resource_class.name.underscore }
-}
-```
-
-You can use: Table, Header, Body, Footer, HeaderRow, BodyRow, FooterRow,
-HeaderCell, BodyCell, FooterCell.
-
-So, you can replace table with ordered list or something you need.
-
-## Partial rendering
-
-Could be useful for twitter-style pagination:
-
-```ruby
-table.element_to_html(:header, collection, User)
-table.element_to_html(:body, collection, User)
-table.element_to_html(:footer, collection, User)
-```
-
-## TODO
-
-1. Think about sorting.
-2. Formatted output.
-3. Data attrs for everything.
-4. Authospan.
-5. :row as parameter.
-6. Reusable cells: reuse :icon, :name, :icon, :checkbox, for: [:header, :footer]
-7. Shortened cell definition
-9. make request, response and so on accessible at definition scope.
-
 ## Contributing
 
 1. Fork it
@@ -167,3 +125,10 @@ table.element_to_html(:footer, collection, User)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## TODO
+
+1. Think about sorting.
+2. Formatted output.
+3. Authospan.
+4. View helper for rendering

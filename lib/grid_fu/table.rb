@@ -1,13 +1,41 @@
 module GridFu
-  class Table < Element
-    config.tag = 'table'
-    config.render_nested_elements = %w(header body footer)
-    config.allowed_configuration_options = %w(tag html)
+  class Table
+    def initialize(&block)
+      @columns    = []
 
-    nest :header, Header
-    nest :body, Body
-    nest :footer, Footer
+      @body       = []
+      @header     = []
+      @footer     = []
 
-    nest_through :body, :row, :cell
+      @body_row   = []
+      @header_row = []
+      @footer_row = []
+
+      yield self
+    end
+
+    class << self
+      # Defines table and returns it.
+      #
+      # Example:
+      #   table = GridFu.define( html: { class: 'table' } ) do
+      #     ...
+      #   end
+      #
+      #   puts table.to_html(collection)
+      def define(*args, &block)
+        self.class.Table.new(&block)
+      end
+
+      # Defines table, renders it and returns the result
+      #
+      # Example:
+      #   puts GridFu.render(collection, html: { class: 'table' } ) do
+      #     ...
+      #   end
+      def render(*args, &block)
+        define(&block).to_html(*args)
+      end
+    end
   end
 end
