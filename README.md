@@ -129,7 +129,8 @@ end
 ```
 
 c.body value block context will be set to the AdminTable instance by default, so
-link_to will not work.
+link_to will not work without passed context. All blocks are evaluated with
+#instance_exec.
 
 Last parameter is a reference to GridFu::Table instance.
 
