@@ -1,7 +1,7 @@
 module GridFu
-  # TODO: Code is complicated, should divide & simplify.
+  # TODO: Code is complicated, should divide & simplify, also codeclimate reports D.
   class Table
-    # Renders table from collection
+    # Renders collection as html table.
     def to_html(collection, member_class = nil)
       table = apply_defaults(:table)
 
@@ -46,7 +46,7 @@ module GridFu
 
                 tag(cell_options) do
                   if value_block.present?
-                    value_block.call(member, index)
+                    @definition_binding.instance_exec(member, index, &value_block)
                   elsif key.present?
                     member.send(key)
                   end

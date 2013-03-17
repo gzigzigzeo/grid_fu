@@ -93,7 +93,7 @@ class AdminTable < GridFu::Table
   def move_icon_column
     column do |c|
       c.header
-      c.body   { |member| link_to icon(:move), '#' }
+      c.body { |member| link_to icon(:move), '#' }
     end
   end
 
@@ -108,6 +108,11 @@ puts AdminTable.render(users, User) do
   t.check_box_column
 end
 ```
+
+NB! All blocks that produce values are evaluated at the binding where table
+was defined. So, if you define table in views, everything is evaluated at
+view's context.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -136,3 +141,4 @@ Or install it yourself as:
 2. Formatted output.
 3. Authospan.
 4. View helper for rendering
+5. Block contexts.

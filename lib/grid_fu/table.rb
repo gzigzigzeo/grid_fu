@@ -11,6 +11,8 @@ module GridFu
       @header_row = []
       @footer_row = []
 
+      @definition_binding = eval('self', block.binding)
+
       yield self
     end
 
