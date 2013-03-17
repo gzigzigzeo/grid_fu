@@ -3,7 +3,7 @@
 Inspired by discussion at: https://github.com/evilmartians/slashadmin/issues/3.
 Rails table renderer that tries to be DRY & flexible.
 
-NB!: WIP, experimental, so do not rely on it until u see this warning.
+NB!: WIP, experiment so do not rely on it until u see this warning.
 
 ## Usage
 
@@ -86,7 +86,7 @@ wrapped with tag on render.
 
 Any option could be a block. Block accepts member or member class and index.
 
-The other way is to inherit table class:
+## Reusing
 
 ```ruby
 class AdminTable < GridFu::Table
