@@ -11,9 +11,7 @@ module GridFu
       @header_row = []
       @footer_row = []
 
-      @definition_binding = eval('self', block.binding)
-
-      yield self
+      @definition = block
     end
 
     class << self
@@ -29,10 +27,10 @@ module GridFu
         self.new(&block)
       end
 
-      # Defines table, renders it and returns the result
+      # Defines table, renders it and returns the result.
       #
       # Example:
-      #   puts GridFu.render(collection, html: { class: 'table' } ) do
+      #   puts GridFu.render(self, collection, html: { class: 'table' } ) do
       #     ...
       #   end
       def render(*args, &block)

@@ -15,5 +15,5 @@ def sample_collection
 end
 
 def render_sample_table(&block)
-  GridFu::Table.render(sample_collection, SampleModel, &block)
+  GridFu::Table.render(self, sample_collection, SampleModel, &block)
 end

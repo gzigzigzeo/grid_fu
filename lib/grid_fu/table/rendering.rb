@@ -2,25 +2,27 @@ module GridFu
   # TODO: Code is complicated, should divide & simplify, also codeclimate reports D.
   class Table
     # Renders collection as html table.
-    def to_html(collection, member_class = nil)
+    def to_html(context, collection, member_class = nil)
+      context.instance_exec(self, &@definition)
+
       table = apply_defaults(:table)
 
       tag(table, member_class) do
         html = []
 
-        html << header_to_html(member_class)
-        html << body_to_html(collection, member_class)
-        html << footer_to_html(member_class)
+        html << header_to_html(context, member_class)
+        html << body_to_html(context, collection, member_class)
+        html << footer_to_html(context, member_class)
 
         html.join
       end
     end
 
     # Renders table header
-    def header_to_html(member_class)
+    def header_to_html(context, member_class)
       section_to_html(:header, member_class) do |key, cell_options, index, &block|
         if block.present?
-          @definition_binding.instance_exec(member_class, index, &block)
+          context.instance_exec(member_class, index, &block)
         elsif key.present?
           member_class.human_attribute_name(key)
         end
@@ -28,7 +30,7 @@ module GridFu
     end
 
     # Render table body
-    def body_to_html(collection, member_class = nil)
+    def body_to_html(context, collection, member_class = nil)
       rows = get_section(:body)
       section = apply_defaults(:body)
 
@@ -46,7 +48,7 @@ module GridFu
 
                 tag(cell_options) do
                   if value_block.present?
-                    @definition_binding.instance_exec(member, index, &value_block)
+                    context.instance_exec(member, index, &value_block)
                   elsif key.present?
                     member.send(key)
                   end
@@ -62,9 +64,9 @@ module GridFu
     end
 
     # Renders table footer
-    def footer_to_html(member_class = nil)
+    def footer_to_html(context, member_class = nil)
       section_to_html(:footer, member_class) do |key, cell_options, index, &block|
-        @definition_binding.instance_exec(member_class, index, &block) if block.present?
+        context.instance_exec(member_class, index, &block) if block.present?
       end
     end
 

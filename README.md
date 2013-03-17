@@ -104,16 +104,15 @@ class AdminTable < GridFu::Table
   end
 end
 
-puts AdminTable.render(users, User) do
+# Self is a context in which all blocks are evaluated
+puts AdminTable.render(self, users, User) do
   t.move_icon_column
   t.column :name
   t.check_box_column
 end
 ```
 
-NB! All blocks that produce values are evaluated at the binding where table
-was defined. So, if you define table in view, every column's body/footer/header
-block is evaluated at view's context.
+## Twitter-style pagination
 
 ## Installation
 
