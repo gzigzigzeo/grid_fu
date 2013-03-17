@@ -110,8 +110,8 @@ end
 ```
 
 NB! All blocks that produce values are evaluated at the binding where table
-was defined. So, if you define table in views, everything is evaluated at
-view's context.
+was defined. So, if you define table in view, every column's body/footer/header
+block is evaluated at view's context.
 
 ## Installation
 
