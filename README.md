@@ -9,7 +9,7 @@ Somwhere in your view:
 
 ```erb
 <%=
-  GridFu.render(collection, User) do |t|
+  GridFu::Table.render(collection, User) do |t|
     t.column :id
     t.column :name
   end
