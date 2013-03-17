@@ -38,7 +38,7 @@ GridFu::Table.render(self, collection, User) do |t|
   t.column do
     t.header { |member_class, index| member_class.to_s }
 
-    # Each collection member will be presented with two rows
+    # Each collection member will be presented with two rows.
     # Let call them odd and even.
     t.body   :id
     t.body do |member, index|
@@ -66,7 +66,8 @@ Will produce the following:
   <tbody class="users">
     <tr data-id="1"><td>1</td><td>Old member</td></tr>
     <tr class="smaller"><td>John doe</td><td>Warning!</td></tr>
-    <tr>...</tr>
+    <tr data-id="2">...</tr>
+    ...
   </tbody>
 </table>
 ```
@@ -82,9 +83,10 @@ GridFu::Table.config.body_row = { html: -> { |member| { html: { data: { id: memb
 ```
 
 You must specify tag for table element. If tag is nil section will not be
-wrapped with tag on render.
+wrapped within tag on render, but content will be rendered.
 
-Any option could be a block. Block accepts member or member class and index.
+Any option could be a block. Block accepts member or member class and index and
+a reference to table's object.
 
 ## Reusing
 
