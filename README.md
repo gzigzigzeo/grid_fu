@@ -113,20 +113,20 @@ end
 
 ## Evaluation context
 
-Note that in first #render parameter you must pass blocks evaluation context.
+Note that in first #render parameter you must the context for blocks to evaluate.
 
-In our example:
 ```ruby
-column do |c|
-  c.header
-  c.body { |member, index, table| link_to icon(:move), '#' }
+class AdminTable < GridFu::Table
+  column do |c|
+    c.header
+    c.body { |member, index, t| link_to icon(:move), '#' }
+  end
 end
 ```
 
-c.body context by default will be AdminTable instance, so link_to will not be
-available if you give no context. Also, any conditions with controller/params
-and so on will not be available in definition scope if you will not pass this
-scope.
+c.body context by default will be set to AdminTable instance, so link_to will
+work. In other hand, we could pass context instance as parameter, but it may
+complicate our blocks.
 
 Last parameter is a pass-back to GridFu::Table instance.
 
