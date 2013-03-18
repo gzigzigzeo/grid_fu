@@ -36,12 +36,12 @@ Will produce the following:
 ```ruby
 GridFu::Table.render(self, collection, User) do |t|
   t.column do
-    t.header { |member_class, index| member_class.to_s }
+    t.header { |member_class, index, _| member_class.to_s }
 
     # Each collection member will be presented with two rows.
     # Let call them odd and even.
     t.body   :id
-    t.body do |member, index|
+    t.body do |member, index, _|
       if member.created_at < 5.years.ago
         "Old member"
       end
@@ -51,12 +51,12 @@ GridFu::Table.render(self, collection, User) do |t|
   t.column do
     t.header :name
     t.body   :name
-    t.body   { |member| "Warning!" if member.dangerous? }
+    t.body   { |member, _, _| "Warning!" if member.dangerous? }
   end
 
   t.body     html: { class: 'users' }
-  t.body_row html: { |member| { data: { id: member.id } } } # Options for odd rows
-  t.body_row html: { class: 'smaller' }                     # Options for even rows
+  t.body_row html: { |member, _, _| { data: { id: member.id } } } # Options for odd rows
+  t.body_row html: { class: 'smaller' }                        # Options for even rows
 end
 
 Will produce the following:
@@ -129,9 +129,20 @@ end
 ```
 
 c.body value block context will be set to the AdminTable instance by default, so
-link_to will not work without passed context. All blocks are evaluated with #instance_exec.
+link_to will not work without passed context. So, all blocks are evaluated
+with #instance_exec in the context passed to constructor.
 
-Last parameter is a reference to GridFu::Table instance.
+All blocks accepts member or member class as first argumetn, row index as second
+argument for rows and cells and a reference to the table instance as last argument.
+
+```ruby
+...
+t.body { |member_class, table| ... }     # No row index
+
+c.column do |c|
+  c.body { |member, index, table| ... }
+end
+```
 
 ## Twitter-style pagination
 

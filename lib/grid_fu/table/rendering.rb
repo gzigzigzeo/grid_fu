@@ -5,7 +5,7 @@ module GridFu
     def to_html(collection, member_class = nil)
       table = apply_defaults(:table)
 
-      render_tag(table, member_class) do
+      render_tag(table, member_class, self) do
         html = []
 
         html << header_to_html(member_class)
@@ -30,7 +30,7 @@ module GridFu
     # Render table body
     def body_to_html(collection, member_class = nil)
       section = apply_defaults(:body)
-      render_tag(section, member_class) do
+      render_tag(section, member_class, self) do
         render_body_rows(collection, member_class)
       end
     end
@@ -45,7 +45,7 @@ module GridFu
           row_options = row_options.first
           row_options = apply_defaults(:body_row, row_options)
 
-          render_tag(row_options, member, index) do
+          render_tag(row_options, member, index, self) do
             cols = row.map do |column|
               key, cell_options, value_block = column
               cell_options = apply_defaults(:body_cell, cell_options)
@@ -86,12 +86,12 @@ module GridFu
           row_options = row_options.first
           row_options = apply_defaults(row_key, row_options)
 
-          render_tag(row_options, member_class, index) do
+          render_tag(row_options, member_class, index, self) do
             cols = row.map do |column|
               key, cell_options, value_block = column
               cell_options = apply_defaults(cell_key, cell_options)
 
-              render_tag(cell_options, member_class) do
+              render_tag(cell_options, member_class, index, self) do
                 block.call(key, cell_options, index, &value_block)
               end
             end

@@ -5,7 +5,7 @@ describe GridFu::Table do
     subject do
       render_sample_table do |t|
         t.column do |t|
-          t.header :id, html: ->(member_class) { { class: member_class.name } }
+          t.header :id, html: ->(member_class, _, _) { { class: member_class.name } }
           t.header { 'Search id' }
           t.body   :id
           t.body   { 'Value id' }
@@ -13,11 +13,11 @@ describe GridFu::Table do
 
         t.column do |t|
           t.header :name
-          t.body   { |member| member.value }
+          t.body   { |member, _, _| member.value }
           t.footer { 'Footer name' }
         end
 
-        t.body(html: ->(_) { { class: 'body' } })
+        t.body(html: ->(_, _) { { class: 'body' } })
         t.body_row({ html: { class: 'body-row-odd' } })
       end
     end
