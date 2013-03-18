@@ -2,7 +2,7 @@ module GridFu
   class Table
     include ActiveSupport::Configurable
 
-    def initialize(&block)
+    def initialize(context, &block)
       @columns    = []
 
       @body       = []
@@ -13,30 +13,20 @@ module GridFu
       @header_row = []
       @footer_row = []
 
-      @definition = block
+      @context    = context
+
+      @context.instance_exec(self, &block)
     end
 
     class << self
-      # Defines table and returns it.
-      #
-      # Example:
-      #   table = GridFu.define do
-      #     ...
-      #   end
-      #
-      #   puts table.to_html(self, users, User)
-      def define(*args, &block)
-        self.new(&block)
-      end
-
-      # Defines table, renders it and returns the result.
+      # Renders it and returns the result.
       #
       # Example:
       #   puts GridFu.render(self, users, User) do
       #     ...
       #   end
-      def render(*args, &block)
-        define(&block).to_html(*args)
+      def render(context, *args, &block)
+        new(context, &block).to_html(*args)
       end
     end
   end

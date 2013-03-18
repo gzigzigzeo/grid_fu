@@ -11,7 +11,7 @@ Somwhere in your view:
 
 ```erb
 <%=
-  GridFu::Table.render(collection, User) do |t|
+  GridFu::Table.render(self, collection, User) do |t|
     t.column :id
     t.column :name
   end

@@ -1,11 +1,11 @@
 module GridFu
   class Table
     private
-    def render_tag(context, options, *args, &block)
+    def render_tag(options, *args, &block)
       options = options.slice(:tag, :html)
       options.each do |key, option|
         options[key] = option.is_a?(Proc) ?
-          context.instance_exec(*args, &option) : option
+          @context.instance_exec(*args, &option) : option
       end
       tag(options[:tag], options[:html], &block)
     end
