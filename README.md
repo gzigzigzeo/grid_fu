@@ -58,6 +58,7 @@ GridFu::Table.render(self, collection, User) do |t|
   t.body_row html: { |member, _, _| { data: { id: member.id } } } # Options for odd rows
   t.body_row html: { class: 'smaller' }                        # Options for even rows
 end
+```
 
 Will produce the following:
 ```html
@@ -82,11 +83,9 @@ GridFu::Table.config.body     = { html: { class: 'table-body' }, tag: 'tbody' }
 GridFu::Table.config.body_row = { html: -> { |member| { html: { data: { id: member.id } } } }
 ```
 
-You must specify tag for table element. If tag is nil section will not be
-wrapped within tag on render, but content will be rendered.
+You must specify tag for table element. If tag is nil section will not be wrapped within tag on render, but content will be rendered.
 
-Any option could be a block. Block accepts member or member class and index and
-a reference to table's object.
+Any option could be a block. Block accepts member or member class and index and a reference to table's object.
 
 ## Reusing
 
@@ -115,7 +114,7 @@ end
 
 ## Evaluation context
 
-Note that in first #render parameter you must pass the context for blocks to evaluate.
+You must pass evaluation context at first #render argument. Every block will be instance_exec'ed in passed context.
 
 ```ruby
 class AdminTable < GridFu::Table
@@ -128,12 +127,9 @@ class AdminTable < GridFu::Table
 end
 ```
 
-c.body value block context will be set to the AdminTable instance by default, so
-link_to will not work without passed context. So, all blocks are evaluated
-with #instance_exec in the context passed to constructor.
+c.body value block context will be set to the AdminTable instance by default, so link_to will not work without passed context. So, all blocks are evaluated with #instance_exec in the context passed to constructor.
 
-All blocks accepts member or member class as first argumetn, row index as second
-argument for rows and cells and a reference to the table instance as last argument.
+All blocks accepts member or member class as first argumetn, row index as second argument for rows and cells and a reference to the table instance as last argument.
 
 ```ruby
 ...
@@ -180,7 +176,6 @@ Or install it yourself as:
 
 ## TODO
 
-1. Think about sorting.
 2. Formatted output.
 3. Authospan.
 4. View helper for rendering
