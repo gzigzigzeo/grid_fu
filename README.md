@@ -40,7 +40,7 @@ GridFu::Table.render(self, collection, User) do |t|
 
     # Each collection member will be presented with two rows.
     # Let call them odd and even.
-    t.body   :id
+    t.body :id
     t.body do |member, index, _|
       if member.created_at < 5.years.ago
         "Old member"
@@ -61,6 +61,7 @@ end
 ```
 
 Will produce the following:
+
 ```html
 <table>
   <thead><tr><th>User</th></tr></thead>
@@ -114,7 +115,8 @@ end
 
 ## Evaluation context
 
-You must pass evaluation context at first #render argument. Every block will be instance_exec'ed in passed context.
+Every block in table configuration is evaluated inside context passed
+to #render as a first argument.
 
 ```ruby
 class AdminTable < GridFu::Table
@@ -124,19 +126,6 @@ class AdminTable < GridFu::Table
       c.body { |member, index, t| link_to icon(:move), '#' }
     end
   end
-end
-```
-
-c.body value block context will be set to the AdminTable instance by default, so link_to will not work without passed context. So, all blocks are evaluated with #instance_exec in the context passed to constructor.
-
-All blocks accepts member or member class as first argumetn, row index as second argument for rows and cells and a reference to the table instance as last argument.
-
-```ruby
-...
-t.body { |member_class, table| ... }     # No row index
-
-c.column do |c|
-  c.body { |member, index, table| ... }
 end
 ```
 
